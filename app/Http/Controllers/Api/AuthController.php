@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +26,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request): JsonResponse
     {
-        $credentials = ['login' => $request->login, 'password' => $request->password];
+        $credentials = $request->only('login', 'password');
 
         if (! Auth::attempt($credentials)) {
             return $this->error('', 'Credentials do not match.', 401);
@@ -35,11 +34,11 @@ class AuthController extends Controller
 
         $user = User::where('login', $request->login)->first();
 
-        $token = $user->createToken('API Token of ' . $user->first_name);
+        $token = $user->createToken('API Token of ' . $user->first_name)->plainTextToken;
 
         return $this->success([
             'user' => $user,
-            'token' => $token->plainTextToken
+            'token' => $token
         ], 'You have been successfully logged in.');
     }
 
@@ -61,20 +60,20 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('API Token of ' . $request->first_name);
+        $token = $user->createToken('API Token of ' . $request->first_name)->plainTextToken;
 
         return $this->success([
             'user' => $user,
-            'token' => $token->plainTextToken
+            'token' => $token
         ], 'You have been successfully logged in.');
     }
 
     /**
      * Handle an incoming logout request.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         Auth::user()->currentAccessToken()->delete();
 
