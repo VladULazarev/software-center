@@ -15,3 +15,5 @@ Api для работы с событиями.
 https://www.postman.com/speeding-firefly-941566/workspace/api-laravel/collection/25973223-bd943155-ce22-47f2-88d3-fcb55f2068a6?action=share&creator=25973223
 ```
 
+![image 1](public/1.png)
+
