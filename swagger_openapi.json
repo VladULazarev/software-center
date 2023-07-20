@@ -1,0 +1,549 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Api для работы с событиями",
+    "description": "Сервер для работы с событиям, которые создают сами ползователи",
+    "contact": {
+      "name": "API Support",
+      "email": "getyourbestsite@gmail.com"
+    },
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://software-center-api.getyoursite.info/api/",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "description": "Регистрирует нового прользователя",
+        "tags": [
+          "Register"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RegisterBody"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Данные нового пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NewUser"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The login has already been taken.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "Успешный вход в систему зарегистрированного пользователя",
+        "tags": [
+          "Login"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LoginBody"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You have been successfully logged in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LoggedUser"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials do not match",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "description": "Выход из системы текущего пользователя",
+        "tags": [
+          "Logout"
+        ],
+        "responses": {
+          "200": {
+            "description": "You have successfully been logged out.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "description": "Возвращает все существующие события для текущего пользователя.",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "Список событий.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource you requested could not be found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Создает новое событие",
+        "tags": [
+          "Events"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EventBody"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный ответ с созданным событием",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource you requested could not be found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "description": "Возвращает событие, соответствующее идентификатору.",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Идентификатор события",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ с соответствующим идентификатору событием",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource you requested could not be found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Удаляет событие соответствующее идентификатору, если оно создано текущим пользователем",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Идентификатор события",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The resource you requested have been successfully deleted.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "The resource you requested could not be found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Event": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "description": "Идентификатор события",
+            "example": "13"
+          },
+          "event_attributes": {
+            "type": "object",
+            "description": "Атрибуты события",
+            "properties": {
+              "title": {
+                "type": "string",
+                "example": "Est animi totam voluptatum harum esse est vero consequuntur."
+              },
+              "description": {
+                "type": "string",
+                "example": "Saepe rerum molestiae qui ea temporibus rerum saepe."
+              },
+              "participants": {
+                "type": "string",
+                "example": "a:2:{i:0;i:1;i:1;i:5;}"
+              },
+              "created at": {
+                "type": "string",
+                "example": "2023-06-27T19:54:35.000000Z"
+              },
+              "updated at": {
+                "type": "string",
+                "example": "2023-06-27T20:01:24.000000Z"
+              }
+            }
+          },
+          "event_author": {
+            "type": "object",
+            "description": "Автор события",
+            "properties": {
+              "author_id": {
+                "type": "string",
+                "example": "1"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Александр"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Мишин"
+              }
+            }
+          },
+          "event_participants": {
+            "type": "object",
+            "description": "Участники события",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "2"
+              },
+              "login": {
+                "type": "string",
+                "example": "voluptas"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Владлена"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Кулакова"
+              },
+              "birthday": {
+                "type": "string",
+                "example": "1980-03-31"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2023-06-30 22:54:20"
+              },
+              "pivot": {
+                "type": "object",
+                "description": "Сводная таблица",
+                "properties": {
+                  "event_id": {
+                    "type": "string",
+                    "example": "13"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "example": "2"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "Сообщение о ошибке",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EventBody": {
+        "type": "object",
+        "description": "Тело события",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Est animi totam voluptatum harum esse est vero consequuntur."
+          },
+          "description": {
+            "type": "string",
+            "example": "Saepe rerum molestiae qui ea temporibus rerum saepe."
+          }
+        }
+      },
+      "RegisterBody": {
+        "type": "object",
+        "description": "Данные необходимые для регистрации нового пользователя",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "admin"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Влад"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Лазарев"
+          },
+          "birthday": {
+            "type": "string",
+            "example": "2000-05-15"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456789"
+          },
+          "password_confirmation": {
+            "type": "string",
+            "example": "123456789"
+          }
+        }
+      },
+      "LoginBody": {
+        "type": "object",
+        "description": "Данные пользователя необходимые для входа в систему",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456789"
+          }
+        }
+      },
+      "NewUser": {
+        "type": "object",
+        "description": "Данные нового пользователя",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "admin"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Влад"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Лазарев"
+          },
+          "birthday": {
+            "type": "string",
+            "example": "2000-05-15"
+          },
+          "id": {
+            "type": "string",
+            "example": "7"
+          },
+          "token": {
+            "type": "string",
+            "example": "8|JGNMXL9UG74kJEDnIeoAjv7FyYAAYhBL4E7V49Ug"
+          }
+        }
+      },
+      "LoggedUser": {
+        "type": "object",
+        "description": "Данные пользователя, вошедшего в систему",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1"
+          },
+          "login": {
+            "type": "string",
+            "example": "admin"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Влад"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Лазарев"
+          },
+          "birthday": {
+            "type": "string",
+            "example": "2000-05-15"
+          },
+          "token": {
+            "type": "string",
+            "example": "8|JGNMXL9UG74kJEDnIeoAjv7FyYAAYhBL4E7V49Ug"
+          }
+        }
+      }
+    }
+  }
+}
