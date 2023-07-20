@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\EventResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\HttpResponses;
 
@@ -18,8 +19,9 @@ class EventController extends Controller
 
     /**
      * Display a listing of the resource.
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(): JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function index(): JsonResponse|AnonymousResourceCollection
     {
         $events = EventResource::collection(Event::latest('id')->get());
 
