@@ -17,3 +17,17 @@ https://www.postman.com/speeding-firefly-941566/workspace/api-laravel/collection
 
 ![image 1](public/1.png)
 
+### Документация Api
+
+Посмотреть документацию для Api, созданную с помощью 'Swagger' можно здесь:
+
+```bash
+https://github.com/VladULazarev/software-center-api/blob/main/swagger_openapi.json
+```
+
+Код можно скопировать и вставить в редактор 'Swagger' здесь:
+
+```bash
+https://editor-next.swagger.io/
+```
+
